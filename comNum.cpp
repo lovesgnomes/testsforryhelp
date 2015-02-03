@@ -2,23 +2,83 @@
 #include <cstring>
 #include <string.h>
 #include <stdio.h>
+#include <cstdlib>
 
 ComplexNumber::ComplexNumber(double rr, double ii) : r(rr), i(ii) {
 }
 
 //turn str into seperate parts and make it a ComNum 
 //*str is an array
-ComplexNumber::ComplexNumber(char * str){
+ComplexNumber::ComplexNumber(const char * str){
+  //this size is wrong, and idk why
+    cout <<  "size" << sizeof(str) << endl;
     char bloop[100];
     char *punch;
+    char *decoy;
+    int tokenNum = 0;
+    bool firstIm = false;
+    bool lastIm = false;
+    int totalTokens = 0;
     strcpy(bloop, str);
-    punch = strtok(bloop, "+-");
+
+    punch = strtok(bloop, "+- ");
+    decoy = strtok(bloop, "+- ");
+    
+    
+    //finding out how many parts are inputted
+    while (decoy != NULL) {
+    decoy = strtok(NULL, " +- ");
+        totalTokens++; }
+        //is also giving wrong number
+        cout << "total tokens: " << totalTokens << endl;
+    
+    
+    
+    
+    
+    //would be useful if size and totalTokens were working
+    for (int j = 0; j < sizeof(str); j++) {
+          if ((punch[j] == 'i') && (j < sizeof(str)/2)){
+            firstIm = true;
+            } 
+          else if (punch[j] == 'i') {
+            lastIm = true;
+            }
+        
+            }
+            
+          
+          
+   //sorting into tokens, but not doing it correctly either       
    while (punch != NULL)
-   {
-        cout << punch << "then" << endl;
-        punch = strtok(NULL, " ");
+   {    
+     //if the first token has an i, then there is no other number
+        if (firstIm) {
+          i = atof(punch); 
+          r = 0;
+          }
+      //if the second num is imaginary, during the cycle it will    
+        else if (lastIm) {
+        //assign the first value to real
+          if (tokenNum = 0) {
+          r = atof(punch);
+          }
+        //assign the second to imaginary  
+          if (tokenNum = 1) {
+          i = atof (punch);
+          }
+          
+           }
+       //if there isn't an i found, the number goes as is    
+        else {
+          r = atof(punch);
+          i = 0;}
+          
+        punch = strtok(NULL, " +- ");
+        tokenNum++;
+
    } 
-cout << endl;
+
 	  
 }
 
@@ -59,14 +119,16 @@ ComplexNumber operator/ (const ComplexNumber &a, const ComplexNumber &b) {
 	return result;
 }
 
+
+//still don't know how to use this
 istream&  operator>>(istream &in, ComplexNumber &c) {
 
-in >> c;
+in >> c.r >> c.i;
 return in;
 
 }
 //change back
 ostream& operator<< (ostream &out, const ComplexNumber &c) {
-	
+	out << c.r << "+" << c.i << "i";
 	return out;
 }
